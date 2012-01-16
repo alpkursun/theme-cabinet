@@ -1,0 +1,13 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  label: MyString
+  job_id: MyString
+  dev_id: MyString
+  dev_public_key: MyString
+
+two:
+  label: MyString
+  job_id: MyString
+  dev_id: MyString
+  dev_public_key: MyString

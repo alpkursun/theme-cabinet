@@ -1,0 +1,83 @@
+# *** YAML2LOG4R ***
+log4r_config:
+  
+  # define all loggers ...
+  loggers:
+    
+    - name : default
+      level : DEBUG
+      additive : 'false'
+      trace : 'true'
+      outputters:
+      - stderr
+      - datefilelog
+      - standardlog
+      - email
+  
+  # define all outputters (incl. formatters)
+  outputters:
+    
+  - type : StderrOutputter
+    name : stderr
+    level : WARN
+      #only_at :
+      # - INFO
+      # - WARN
+      # - FATAL
+    formatter:
+      date_pattern: '%y-%m-%d %H:%M:%S'
+      #pattern : '%d %l: %m '
+      pattern : "[%l] %d :: %m"
+      type : PatternFormatter
+  
+  - type : StderrOutputter
+    name : stderr_test
+    level : ERROR
+    formatter:
+      date_pattern: '%y-%m-%d %H:%M:%S'
+      # Added 'M' and 't' here - they are slow, but we're not calling unless we need to
+      pattern : "[%l] %d :: %M :: %t"
+      type : PatternFormatter
+  
+  - type : DateFileOutputter
+    name : datefilelog
+    level : DEBUG
+    date_pattern: '%Y-%m-%d'
+    trunc : 'false'
+    dirname : "#{RAILS_ROOT}/log"
+    formatter :
+      date_pattern: '%y-%m-%d %H:%M:%S'
+      #pattern : '%d %l: %m '
+      pattern : "[%l] %d :: %m"
+      type : PatternFormatter
+  
+  - type : FileOutputter
+    name : standardlog
+    level : DEBUG
+    trunc : 'false'
+    filename : "#{RAILS_ROOT}/log/#{RAILS_ENV}.log"
+    formatter :
+      date_pattern: '%y-%m-%d %H:%M:%S'
+      pattern : "[%l] %d :: %m"
+      type : PatternFormatter
+  
+  - type : EmailOutputter
+    name : email
+    level : ERROR
+    server : smtp.example.com
+    port : '25'
+    #domain : smtp.example.com
+    authtype : none
+    #authtype : basic
+    #acct : acctname
+    #passwd : passwd
+    subject : 'Application Error'
+    from : error-handler-person@example.com
+    to : error-handler-person@example.com
+    immediate_at: "FATAL, ERROR"
+    formatfirst : 'true'
+    formatter :
+      date_pattern: '%y-%m-%d %H:%M:%S'
+      # Added 'M' and 't' here - they are slow, but we're not calling unless we need to
+      pattern : "[%l] %d :: %M :: %t"
+      type : PatternFormatter

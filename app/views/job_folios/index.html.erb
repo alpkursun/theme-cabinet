@@ -1,0 +1,25 @@
+<h1>Listing job_folios</h1>
+
+<table>
+  <tr>
+    <th>Label</th>
+    <th>Content path</th>
+    <th></th>
+    <th></th>
+    <th></th>
+  </tr>
+
+<% @job_folios.each do |job_folio| %>
+  <tr>
+    <td><%= job_folio.label %></td>
+    <td><%= job_folio.content_path %></td>
+    <td><%= link_to 'Show', job_folio %></td>
+    <td><%= link_to 'Edit', edit_job_folio_path(job_folio) %></td>
+    <td><%= link_to 'Destroy', job_folio, confirm: 'Are you sure?', method: :delete %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New Job folio', new_job_folio_path %>

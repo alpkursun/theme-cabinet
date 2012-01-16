@@ -1,0 +1,37 @@
+<%= form_for(@dev_folio) do |f| %>
+  <% if @dev_folio.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@dev_folio.errors.count, "error") %> prohibited this dev_folio from being saved:</h2>
+
+      <ul>
+      <% @dev_folio.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <% if false # comment out the label 
+  	%>
+  <div class="field">
+    <%= f.label :label %><br />
+    <%= f.text_field :label %>
+  </div>
+  <% end %>
+  
+  <div class="field">
+    <%= f.label :job_id %><br />
+    <%= f.text_field :job_id %>
+  </div>
+  <div class="field">
+    <%= f.label :dev_id %><br />
+    <%= f.text_field :dev_id %>
+  </div>
+  <div class="field">
+    <%= f.label :dev_public_key %><br />
+    <%= f.file_field :dev_public_key %>
+  </div>
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>

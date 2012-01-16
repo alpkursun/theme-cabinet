@@ -1,0 +1,25 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <b>Label:</b>
+  <%= @dev_folio.label %>
+</p>
+
+<p>
+  <b>Job:</b>
+  <%= @dev_folio.job_id %>
+</p>
+
+<p>
+  <b>Dev:</b>
+  <%= @dev_folio.dev_id %>
+</p>
+
+<p>
+  <b>Dev public key:</b>
+  <%= @dev_folio.dev_public_key %>
+</p>
+
+
+<%= link_to 'Edit', edit_dev_folio_path(@dev_folio) %> |
+<%= link_to 'Back', dev_folios_path %>

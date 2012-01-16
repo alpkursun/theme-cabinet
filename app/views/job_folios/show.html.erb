@@ -1,0 +1,15 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <b>Label:</b>
+  <%= @job_folio.label %>
+</p>
+
+<p>
+  <b>Content path:</b>
+  <%= @job_folio.content_path %>
+</p>
+
+
+<%= link_to 'Edit', edit_job_folio_path(@job_folio) %> |
+<%= link_to 'Back', job_folios_path %>
