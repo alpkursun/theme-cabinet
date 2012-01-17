@@ -1,9 +1,9 @@
 defaults: &DEFAULTS
-  job_root_path: /Users/alpkursun/temp
-  gitolite_working_path: /Users/alpkursun/temp/test_gitolite/gitolite-admin
-  gitolite_keydir_path: /Users/alpkursun/temp/test_gitolite/gitolite-admin/keydir
-  gitolite_conf_file_path: /Users/alpkursun/temp/test_gitolite/gitolite-admin/conf/gitolite.conf
-  gitolite_url_prefix: 'git@skynet:'
+  gitolite_admin_path: /Users/alpkursun/temp/test_gitolite/gitolite-admin
+  git_work_dir_path: /Users/alpkursun/temp/test_gitolite/work
+  git_repo_prefix: 'git@skynet:'
+  git_user_name: 'admin'
+  git_user_email: 'git.admin@themepivot.com'
 
 development:
   <<: *DEFAULTS

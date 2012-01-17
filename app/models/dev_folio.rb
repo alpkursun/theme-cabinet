@@ -6,8 +6,8 @@ class DevFolio
   field :dev_id, type: String
   field :dev_public_key_name, type: String
   
-  #validates_presence_of   :label
-  #validates_uniqueness_of :label
+  validates_presence_of   :label
+  validates_uniqueness_of :label
 
   validates_presence_of   :job_id
   validates_presence_of   :dev_id

@@ -11,16 +11,15 @@ class JobFolio
   validates_presence_of   :content_path
   validates_format_of     :content_path, with: /(\/\w*)+/ # validate path
 
-  # call set_path after initializing
-  after_initialize  :init
+  before_validation :set_derived_fields
   
   # call grab_page before saving record
   before_save :create_repo
 
   protected
   
-  def init
-    
+  def set_derived_fields
+    self.label = self.job_id
   end
   
   def create_repo
