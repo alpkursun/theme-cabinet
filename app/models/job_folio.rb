@@ -11,20 +11,20 @@ class JobFolio
   validates_presence_of   :content_path
   validates_format_of     :content_path, with: /(\/\w*)+/ # validate path
 
-  before_validation :set_derived_fields
+  before_validation :init
   
   # call grab_page before saving record
   before_save :create_repo
 
   protected
   
-  def set_derived_fields
+  def init
     self.label = self.job_id
+    @gitman = Gitman.new(self.label, '')
   end
   
   def create_repo
-    @repo_url = @@git_repo_base + "/" + self.label
-     
+    @gitman.create_and_seed_repo self.content_path
   end
   
 end

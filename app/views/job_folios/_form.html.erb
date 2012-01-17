@@ -11,10 +11,14 @@
     </div>
   <% end %>
 
+  <% if false # comment out the label field 
+  	%>
   <div class="field">
     <%= f.label :label %><br />
     <%= f.text_field :label %>
   </div>
+  <% end %>
+  
   <div class="field">
     <%= f.label :job_id %><br />
     <%= f.text_field :job_id %>

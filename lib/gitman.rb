@@ -50,6 +50,12 @@ class Gitman
     project_repo.push
   end
 
+  def save_public_key(pub_key_file_data, dev_id) 
+    pub_key_save_path = File.join(@@gitolite_keydir_path, "#{dev_id}.pub")
+    File.open(pub_key_save_path, "wb") { |f| f.write pub_key_file_data}
+    return pub_key_save_path
+  end
+  
   private
   
   ## Initialise git repository at given path
