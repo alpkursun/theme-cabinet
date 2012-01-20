@@ -11,25 +11,30 @@ class Gitman
   def initialize(project_label, users) 
     @project_label = project_label
     @users = "@admins #{users}"
-    @project_git_work_path = File.join @@gitolite_work_dir_path, @project_label 
+    @project_git_work_path = File.join @@gitolite_work_dir_path, @project_label
+    @gitolite_conf_entry = "\n\nrepo #{@project_label}\n      RW+ = #{@users}" 
   end
   
   def create_and_seed_repo(project_working_path)
-    create_repo
-    seed_repo project_working_path
+    if create_repo
+      seed_repo project_working_path
+    end
   end
 
   ## create base gitolite repository for project
   def create_repo
-    # update gitolite-admin/conf/gitolite.conf file
-    new_conf_entry = "\n\nrepo #{@project_label}\n      RW+ = #{@users}"
-    File.open(@@gitolite_conf_file_path, "a") { |f| f.write new_conf_entry}
-    
-    # push updates to gitolite-admin repo to create new project repo
-    gitolite_repo = git_init @@gitolite_admin_path
-    gitolite_repo.add('.')
-    gitolite_repo.commit("Added repo #{@project_label} with users: #{@users}")
-    gitolite_repo.push
+    # update gitolite-admin/conf/gitolite.conf file ...
+    # but only if there is NOT already an entry for this repo 
+    # ... to avoid duplicating the entry
+    conf_entry = File.read(@@gitolite_conf_file_path).slice(@gitolite_conf_entry)
+    if (conf_entry == nil)
+      File.open(@@gitolite_conf_file_path, "a") { |f| f.write @gitolite_conf_entry}
+      # push updates to gitolite-admin repo to create new project repo
+      git_push @@gitolite_admin_path, "Added repo #{@project_label} with users: #{@users}"
+      return true
+    else
+      return false
+    end
     
   end
   
@@ -56,6 +61,17 @@ class Gitman
     return pub_key_save_path
   end
   
+  def delete_repo
+    # note - do not delete the dev's public key as they may be working on multiple projects
+    # delete the conf file entry for this repo from the gitolite.conf file
+    conf = File.read(@@gitolite_conf_file_path)
+    conf.slice!(@gitolite_conf_entry)
+    File.open(@@gitolite_conf_file_path, "w") { |f| f.write conf }
+    
+    # commit the update to the gitolite-admin repo
+    git_push @@gitolite_admin_path, "Deleted config entry for repo #{@project_label}"
+  end
+  
   private
   
   ## Initialise git repository at given path
@@ -64,6 +80,13 @@ class Gitman
     git_repo.config('user.name', @@git_user_name)
     git_repo.config('user.email', @@git_user_email)
     return git_repo
+  end
+  
+  def git_push(repo_path, log_message)
+    gitolite_repo = git_init repo_path
+    gitolite_repo.add('.')
+    gitolite_repo.commit(log_message)
+    gitolite_repo.push
   end
   
 end

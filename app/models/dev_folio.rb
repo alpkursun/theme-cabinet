@@ -25,10 +25,17 @@ class DevFolio
   before_validation :init
   before_save :save_public_key
   after_save :create_repo
+  before_destroy :delete_repo
+  
+  protected
   
   def init
     # TODO add public key file content validation here
-    self.dev_public_key_name = @file_data.original_filename # set filename here to ensure validation
+    
+    # set filename here to ensure form validation succeeds
+    if @file_data
+      self.dev_public_key_name = @file_data.original_filename
+    end
     self.label = self.job_id + "_" + self.dev_id
     @gitman = Gitman.new(self.label, self.dev_id)
   end
@@ -39,13 +46,19 @@ class DevFolio
   
   def create_repo
     # create the repo for the developer
-    @gitman.create_repo
-    # get the working directory path for this project's files
-    job = JobFolio.where(job_id: self.job_id).first()
-    @gitman.seed_repo job.content_path
+    if @gitman.create_repo
+      # if creating the repo succeeded (ie, no duplicates), then seed it
+      # get the working directory path for this project's files
+      job = JobFolio.where(job_id: self.job_id).first()
+      @gitman.seed_repo job.content_path
+    end
   end
   
-  # TODO add code to delete saved public keys when row is deleted from db
-  # TODO fix issue with duplicating gitolite.conf entry
+  def delete_repo
+    if not @gitman
+      self.init
+    end
+    @gitman.delete_repo
+  end
   
 end
