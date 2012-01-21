@@ -4,3 +4,6 @@ require 'rubygems'
 ENV['BUNDLE_GEMFILE'] ||= File.expand_path('../../Gemfile', __FILE__)
 
 require 'bundler/setup' if File.exists?(ENV['BUNDLE_GEMFILE'])
+
+# Register exit handler call to stop the file listener thread
+at_exit { FileListener.instance.stop_listening }

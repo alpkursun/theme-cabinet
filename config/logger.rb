@@ -18,6 +18,9 @@ cfg.load_yaml_file("#{RAILS_ROOT}/config/log4r.yml")
 RAILS_DEFAULT_LOGGER = Log4r::Logger['default']
 RAILS_DEFAULT_LOGGER.level = (RAILS_ENV == 'development' ? Log4r::DEBUG : Log4r::INFO)
 
+# add an alias for convenience
+LOGGER = RAILS_DEFAULT_LOGGER
+
 if RAILS_ENV == 'test'
   Log4r::Outputter['stderr'].level = Log4r::OFF
   RAILS_DEFAULT_LOGGER.add( Log4r::Outputter['stderr_test'] )

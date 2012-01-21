@@ -4,6 +4,8 @@ defaults: &DEFAULTS
   git_repo_prefix: 'git@skynet:'
   git_user_name: 'admin'
   git_user_email: 'git.admin@themepivot.com'
+  wordpress_unzip_path: /Users/alpkursun/temp/test_wordpress_unzip
+  ftp_landing_path: /Users/alpkursun/temp/ftp_landing
 
 development:
   <<: *DEFAULTS
