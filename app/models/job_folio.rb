@@ -16,6 +16,21 @@ class JobFolio
   # call grab_page before saving record
   before_save :create_repo
 
+  def self.save_new_folio(job_id, content_path)
+    begin
+      job_folio = self.new
+      job_folio.job_id = job_id
+      job_folio.content_path = content_path
+      if job_folio.valid?
+        job_folio.save
+      end
+    rescue
+      LOGGER.error "Error occurred saving job folio: #{$!}"
+    else
+      LOGGER.debug "Successfully saved job folio!"
+    end
+  end
+  
   protected
   
   def init
