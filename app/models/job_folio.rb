@@ -24,8 +24,8 @@ class JobFolio
       if job_folio.valid?
         job_folio.save
       end
-    rescue
-      LOGGER.error "Error occurred saving job folio: #{$!}"
+    rescue Exception => e
+      LOGGER.error "Error occurred saving job folio: #{e.message}"
     else
       LOGGER.debug "Successfully saved job folio!"
     end

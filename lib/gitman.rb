@@ -55,9 +55,15 @@ class Gitman
     project_repo.push
   end
 
+  # Save the public key and return the save path
+  # This will check if the file already exists, and if so, will not write to it 
   def save_public_key(pub_key_file_data, dev_id) 
     pub_key_save_path = File.join(@@gitolite_keydir_path, "#{dev_id}.pub")
-    File.open(pub_key_save_path, "wb") { |f| f.write pub_key_file_data}
+    if !File.exists?(pub_key_save_path)
+      File.open(pub_key_save_path, "wb") { |f| f.write pub_key_file_data}
+    else
+      LOGGER.debug "Public key file already exists at #{pub_key_save_path}; this will not be overwritten"
+    end
     return pub_key_save_path
   end
   

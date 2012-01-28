@@ -28,6 +28,11 @@
     <%= f.text_field :dev_id %>
   </div>
   <div class="field">
+    <%= f.label :dev_public_key_text %><br />
+    <%= f.text_field :dev_public_key_text %>
+  </div>
+  <p>Note: You must either copy and paste the public key file content above, or select the public key file to upload below</p>
+  <div class="field">
     <%= f.label :dev_public_key %><br />
     <%= f.file_field :dev_public_key %>
   </div>
