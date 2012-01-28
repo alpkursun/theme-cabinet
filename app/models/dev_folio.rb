@@ -10,12 +10,14 @@ class DevFolio
   field :dev_id, type: String
   field :dev_public_key_name, type: String
   field :dev_public_key_text, type: String
+  field :dev_password, type: String
   
   validates_presence_of   :label
   validates_uniqueness_of :label
 
   validates_presence_of   :job_id
   validates_presence_of   :dev_id
+  validates_presence_of   :dev_password
   validates_presence_of   :dev_public_key_text, on: DEV_PUB_KEY_ENABLED
   
   def dev_public_key=(file_data)
@@ -28,6 +30,7 @@ class DevFolio
  
   before_validation :init
   before_save :create_repo
+  after_save :stage_wp_site
   before_destroy :delete_repo
   
   protected
@@ -39,7 +42,7 @@ class DevFolio
     if @file_data
       self.dev_public_key_text = @file_data.read
     end
-    self.label = self.job_id + "_" + self.dev_id
+    self.label = "#{self.job_id}#{self.dev_id}"
     @gitman = Gitman.new(self.label, self.dev_id)
   end
   
@@ -59,6 +62,18 @@ class DevFolio
     if is_repo_created
       job = JobFolio.where(job_id: self.job_id).first()
       @gitman.seed_repo job.content_path
+    end
+  end
+  
+  # Create the wordpress staging site
+  def stage_wp_site
+    # Note - this assumes that the wordpress files are saved in the repository that
+    # the WPDeploy script will look for them in a particular directory
+    begin 
+      wpd = WPDeploy.new(self.label, self.dev_id, self.dev_password)
+      wpd.deploy
+    rescue Exception => e
+      LOGGER.error "Error occurred staging developer's wordpress site: #{e.message}"
     end
   end
   

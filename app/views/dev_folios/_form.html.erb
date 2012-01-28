@@ -28,12 +28,16 @@
     <%= f.text_field :dev_id %>
   </div>
   <div class="field">
-    <%= f.label :dev_public_key_text %><br />
+    <%= f.label :dev_password %><br />
+    <%= f.password_field :dev_password %>
+  </div>
+  <div class="field">
+    <%= f.label :dev_public_key_text %> (optional)<br />
     <%= f.text_field :dev_public_key_text %>
   </div>
-  <p>Note: You must either copy and paste the public key file content above, or select the public key file to upload below</p>
+  <p>Note: You may either copy and paste the public key file content above, or select the public key file to upload below</p>
   <div class="field">
-    <%= f.label :dev_public_key %><br />
+    <%= f.label :dev_public_key %> (optional)<br />
     <%= f.file_field :dev_public_key %>
   </div>
   <div class="actions">
