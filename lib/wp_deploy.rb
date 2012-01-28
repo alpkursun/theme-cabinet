@@ -1,6 +1,6 @@
 require 'mysql2'
 
-class WPDeploy
+class WpDeploy
 
   # Init
   def initialize( wp_path, wp_user, wp_password )
