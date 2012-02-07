@@ -13,7 +13,11 @@ class DevFoliosController < ApplicationController
   # GET /dev_folios/1
   # GET /dev_folios/1.json
   def show
-    @dev_folio = DevFolio.find(params[:id])
+    begin
+      @dev_folio = DevFolio.find(params[:id])
+    rescue
+      @dev_folio = DevFolio.where(label: params[:id]).first()
+    end
 
     respond_to do |format|
       format.html # show.html.erb
@@ -36,6 +40,12 @@ class DevFoliosController < ApplicationController
   def edit
     @dev_folio = DevFolio.find(params[:id])
   end
+  
+  # GET /dev_folios/1/export
+  def export
+    @dev_folio = DevFolio.find(params[:id])
+    # get latest folio contents as zip file
+  end
 
   # POST /dev_folios
   # POST /dev_folios.json
@@ -56,7 +66,11 @@ class DevFoliosController < ApplicationController
   # PUT /dev_folios/1/push
   # PUT /dev_folios/1/push.json
   def push
-    @dev_folio = DevFolio.find(params[:id])
+    begin
+      @dev_folio = DevFolio.find(params[:id])
+    rescue
+      @dev_folio = DevFolio.where(label: params[:id]).first()
+    end
     
     respond_to do |format|
       if @dev_folio.push_repo
