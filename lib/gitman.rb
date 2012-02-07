@@ -54,6 +54,12 @@ class Gitman
     project_repo.commit("Seeded repo #{@project_label} with project files")
     project_repo.push
   end
+  
+  # Commit and push developer's changes to repository
+  def update_repo
+    git_push @project_git_work_path, "Updated repo #{@project_label}"
+    return true
+  end
 
   # Save the public key and return the save path
   # This will check if the file already exists, and if so, will not write to it 

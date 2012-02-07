@@ -1,5 +1,9 @@
 Cabinet::Application.routes.draw do
-  resources :dev_folios
+  resources :dev_folios do
+    member do
+      put 'push'
+    end
+  end
 
   resources :job_folios
 

@@ -52,6 +52,22 @@ class DevFoliosController < ApplicationController
       end
     end
   end
+  
+  # PUT /dev_folios/1/push
+  # PUT /dev_folios/1/push.json
+  def push
+    @dev_folio = DevFolio.find(params[:id])
+    
+    respond_to do |format|
+      if @dev_folio.push_repo
+        format.html { redirect_to @dev_folio, notice: 'Dev folio was successfully pushed to git repo.' }
+        format.json { head :ok }
+      else
+        format.html { render action: "show" }
+        format.json { render json: @dev_folio.errors, status: :unprocessable_entity }
+      end
+    end
+  end
 
   # PUT /dev_folios/1
   # PUT /dev_folios/1.json

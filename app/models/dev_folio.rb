@@ -33,6 +33,14 @@ class DevFolio
   after_save :stage_wp_site
   before_destroy :delete_repo
   
+  # commit and push updates to the dev repo
+  def push_repo
+    if not @gitman
+      self.init
+    end
+    @gitman.update_repo
+  end
+  
   protected
   
   def init
