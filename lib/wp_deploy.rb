@@ -177,7 +177,7 @@ class WpDeploy
 		LOGGER.debug "wp_deploy: site database dump loaded into   #{@wp_db_name}"
 
 		# migrate domain links
-		#migrate_domain( conn, @wp_db_name, @pivot_domain ) 
+		migrate_domain( conn, @wp_db_name, @pivot_domain ) 
 		LOGGER.debug "wp_deploy: domain links migrated to pivot staging domain"
 
 		# close database connection
