@@ -36,7 +36,7 @@ class WpDeploy
 	end
 
 	def get_old_domain( conn, db_name )
-		res = conn.query("SELECT option_value FROM #{db_name}.wp_options WHERE option_name='siteurl'")
+		res = conn.query("SELECT option_value FROM #{db_name}.#{@wp_table_prefix}options WHERE option_name='siteurl'")
 		if (res.count != 1)
 			return false;
 		else
