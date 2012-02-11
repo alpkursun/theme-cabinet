@@ -145,7 +145,8 @@ class WpDeploy
 		# get the value of $table_prefix from wp_config_file
 		File.read(@wp_config_file).each_line do |line|
 		  if line.start_with?('$table_prefix')
-		    @wp_table_prefix = line.split(' ')[2]
+		    tbl_prefix = line.split(' ')[2]
+		    @wp_table_prefix = tbl_prefix.gsub(/[';]/, '')
 		  end
 		end
 		
