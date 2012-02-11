@@ -140,6 +140,8 @@ class WpDeploy
 		@wp_admin_user = wp_user
 		@wp_admin_password = wp_password
 		@wp_db_data_file = "#{@fs_path}/wp_db_dump.sql"
+		
+		LOGGER.debug "@fs_path = #{@fs_path}"
 
 		LOGGER.debug "fs_path = #{@fs_path}"
 
