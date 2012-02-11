@@ -1,6 +1,6 @@
 require 'mysql2'
 
-class WPDeploy
+class WpDeploy
 
 	def get_connection( user, password, host = 'localhost')
 		Mysql2::Client.new(:host => host, :username => user, :password => password)
@@ -178,6 +178,3 @@ class WPDeploy
 		#puts "wp-config.php updated"
 	end
 end
-
-t = WPDeploy.new( '778787dsme1', 'admin', 'password' )
-t.deploy
