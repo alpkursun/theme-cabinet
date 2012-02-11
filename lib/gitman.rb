@@ -40,19 +40,23 @@ class Gitman
   
   ## Seed gitolite repository with project files 
   def seed_repo(project_working_path)
-    # clone the empty git repo created for this project
-    FileUtils.mkdir_p @project_git_work_path 
-    project_repo = Git.clone "#{@@git_repo_prefix}#{@project_label}.git",
-                    @project_label, 
-                    :path => @@gitolite_work_dir_path
-    
-    # copy the project files into the git working directory
-    FileUtils.cp_r Dir.glob(File.join(project_working_path, '*')), @project_git_work_path
-    
-    # stage and commit the newly copied files
-    project_repo.add('.')
-    project_repo.commit("Seeded repo #{@project_label} with project files")
-    project_repo.push
+    begin
+      # clone the empty git repo created for this project
+      FileUtils.mkdir_p @project_git_work_path 
+      project_repo = Git.clone "#{@@git_repo_prefix}#{@project_label}.git",
+                      @project_label, 
+                      :path => @@gitolite_work_dir_path
+      
+      # copy the project files into the git working directory
+      FileUtils.cp_r Dir.glob(File.join(project_working_path, '*')), @project_git_work_path
+      
+      # stage and commit the newly copied files
+      project_repo.add('.')
+      project_repo.commit("Seeded repo #{@project_label} with project files")
+      project_repo.push
+    rescue
+      LOGGER.error "Error occurred seeding repo #{@project_label} with project files"
+    end
   end
   
   # Commit and push developer's changes to repository
