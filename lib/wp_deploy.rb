@@ -82,7 +82,7 @@ class WpDeploy
 	def process_wp_config( db_name, user, password, host = 'localhost' )
 
   # wp config file
-		filename = "wp-config.php" 
+		filename = File.join(@fs_path, "wp-config.php") 
 
   # unique keys and salts
 		uuid_key = rand_token 
