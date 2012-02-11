@@ -48,15 +48,15 @@ class WpDeploy
 
 	def migrate_domain( conn, db_name, new_domain )
 		old_domain = get_old_domain( conn, db_name )
-
-		  # replace siteurl and home options
-		conn.query("UPDATE #{db_name}.wp_options SET option_value =	replace(option_value, '#{old_domain}', '#{new_domain}') WHERE option_name = 'siteurl' OR option_name = 'home'")
+		
+		# replace siteurl and home options
+		conn.query("UPDATE #{db_name}.#{@wp_table_prefix}options SET option_value =	replace(option_value, '#{old_domain}', '#{new_domain}') WHERE option_name = 'siteurl' OR option_name = 'home'")
 
 	  # replace urls in posts and pages
-	conn.query("UPDATE #{db_name}.wp_posts SET guid = replace(guid, '#{old_domain}', '#{new_domain}')")
+	  conn.query("UPDATE #{db_name}.#{@wp_table_prefix}posts SET guid = replace(guid, '#{old_domain}', '#{new_domain}')")
 
 	  # replace backlinks in posts
-	conn.query("UPDATE #{db_name}.wp_posts SET post_content = replace(post_content, '#{old_domain}', '#{new_domain}')")
+	  conn.query("UPDATE #{db_name}.#{@wp_table_prefix}posts SET post_content = replace(post_content, '#{old_domain}', '#{new_domain}')")
 
 	end
 
@@ -82,7 +82,7 @@ class WpDeploy
 	def process_wp_config( db_name, user, password, host = 'localhost' )
 
   # wp config file
-		filename = File.join(@fs_path, "wp-config.php") 
+		filename = @wp_config_file 
 
   # unique keys and salts
 		uuid_key = rand_token 
@@ -139,7 +139,15 @@ class WpDeploy
 		@wp_db_password = rand_token
 		@wp_admin_user = wp_user
 		@wp_admin_password = wp_password
-		@wp_db_data_file = "#{@fs_path}/wp_db_dump.sql"
+		@wp_db_data_file = File.join(@fs_path, "wp_db_dump.sql")
+		@wp_config_file = File.join(@fs_path, "wp-config.php")
+		
+		# get the value of $table_prefix from wp_config_file
+		File.read(@wp_config_file).each_line do |line|
+		  if line.start_with?('$table_prefix')
+		    @wp_table_prefix = line.split(' ')[2]
+		  end
+		end
 		
 		LOGGER.debug "wp_deploy: fs_path = #{@fs_path}"
 
