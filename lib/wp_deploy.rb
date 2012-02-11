@@ -82,7 +82,7 @@ class WpDeploy
 	def process_wp_config( db_name, user, password, host = 'localhost' )
 
   # wp config file
-		filename = "wp-config.php" 
+		filename = File.join(@fs_path, "wp-config.php") 
 
   # unique keys and salts
 		uuid_key = rand_token 
@@ -141,6 +141,8 @@ class WpDeploy
 		@wp_admin_password = wp_password
 		@wp_db_data_file = "#{@fs_path}/wp_db_dump.sql"
 
+		LOGGER.debug "fs_path = #{@fs_path}"
+
 	end
 
 	def deploy
@@ -151,30 +153,30 @@ class WpDeploy
 
 		# create database
 		create_database( conn, @wp_db_name )
-		#puts "database   #{wp_db_name} created"
+		puts "database   #{@wp_db_name} created"
 
 		# create user
 		create_user( conn, @wp_db_user, @wp_db_password )
-		#puts "user   #{wp_db_user} added"
+		puts "user   #{@wp_db_user} added"
 
 		# grant user privileges on database
 		grant_db_privileges( conn, @wp_db_name, @wp_db_user )
-		#puts "user   #{wp_db_user} granted privileges on   #{wp_db_name}"
+		puts "user   #{@wp_db_user} granted privileges on   #{@wp_db_name}"
 
 		# load sql dump from archive
 		load_data( @wp_db_name, @db_user, @db_password, @wp_db_data_file )
-		#puts "site database dump loaded into   #{wp_db_name}"
+		puts "site database dump loaded into   #{@wp_db_name}"
 
 		# migrate domain links
-		migrate_domain( conn, @wp_db_name, @pivot_domain ) 
-		#puts "domain links migrated to pivot staging domain"
+		#migrate_domain( conn, @wp_db_name, @pivot_domain ) 
+		puts "domain links migrated to pivot staging domain"
 
 		# close database connection
 		conn.close
-		#puts "database connection closed"
+		puts "database connection closed"
 
 		# Process the wp-config.php file
 		process_wp_config( @wp_db_name, @wp_db_user, @wp_db_password )
-		#puts "wp-config.php updated"
+		puts "wp-config.php updated"
 	end
 end
