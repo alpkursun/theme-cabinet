@@ -150,6 +150,7 @@ class WpDeploy
 		end
 		
 		LOGGER.debug "wp_deploy: fs_path = #{@fs_path}"
+		LOGGER.debug "wp_deploy: wp_table_prefix = #{@wp_table_prefix}"
 
 	end
 
