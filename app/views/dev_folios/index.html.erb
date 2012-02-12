@@ -19,6 +19,7 @@
     <td><%= dev_folio.dev_public_key %></td>
     <td><%= link_to 'Show', dev_folio %></td>
     <td><%= link_to 'Push', push_dev_folio_path(dev_folio), method: :put %></td>
+    <td><%= link_to 'Export', export_dev_folio_path(dev_folio) %></td>
     <td><%= link_to 'Edit', edit_dev_folio_path(dev_folio) %></td>
     <td><%= link_to 'Destroy', dev_folio, confirm: 'Are you sure?', method: :delete %></td>
   </tr>

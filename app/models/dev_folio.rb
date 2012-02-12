@@ -41,6 +41,14 @@ class DevFolio
     @gitman.update_repo
   end
   
+  # export the head folio contents as zip file
+  def export_repo
+    if not @gitman
+      self.init
+    end
+    @gitman.export_repo
+  end
+  
   protected
   
   def init

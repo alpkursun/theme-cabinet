@@ -1,7 +1,7 @@
 class Gitman
   
   @@gitolite_admin_path = APP_CONFIG['gitolite_admin_path']
-  @@gitolite_work_dir_path = APP_CONFIG['git_work_dir_path']
+  @@gitolite_work_dir_path = APP_CONFIG['git_work_dir_path'] # this is the wordpress staging area
   @@gitolite_conf_file_path = File.join(@@gitolite_admin_path, 'conf', 'gitolite.conf')
   @@gitolite_keydir_path = File.join(@@gitolite_admin_path, 'keydir')
   @@git_user_name = APP_CONFIG['git_user_name']
@@ -62,6 +62,23 @@ class Gitman
   # Commit and push developer's changes to repository
   def update_repo
     git_push @project_git_work_path, "Updated repo #{@project_label}"
+    return true
+  end
+  
+  # Zip up the head revision in the repository and copy it to the gitolite_work_dir_path,
+  def export_repo
+    tag_string = "accepted"
+    target_zip_file = @project_git_work_path + "_#{tag_string}.zip"
+    # Tag and export the repo head revision contents to project_label + '_accepted'
+    begin
+      git_repo = git_init @project_git_work_path
+      git_repo.add_tag(tag_string)
+      git_repo.archive(tag_string, target_zip_file) # defaults to format of 'zip' if not specified in options
+    rescue Exception => e
+      LOGGER.error "Error occurred exporting repo #{@project_label}: #{e.message}"
+      return false
+    end
+    LOGGER.debug "Exported repo #{@project_label} to #{target_zip_file}"
     return true
   end
 

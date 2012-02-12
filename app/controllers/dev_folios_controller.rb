@@ -43,8 +43,22 @@ class DevFoliosController < ApplicationController
   
   # GET /dev_folios/1/export
   def export
-    @dev_folio = DevFolio.find(params[:id])
-    # get latest folio contents as zip file
+    begin
+      @dev_folio = DevFolio.find(params[:id])
+    rescue
+      @dev_folio = DevFolio.where(label: params[:id]).first()
+    end
+    
+    respond_to do |format|
+      # export the latest folio contents as zip file
+      if @dev_folio.export_repo
+        format.html { redirect_to @dev_folio, notice: 'Dev folio was successfully exported.' }
+        format.json { render json: @dev_folio, status: :created, location: @dev_folio }
+      else
+        format.html { render action: "show" }
+        format.json { render json: @dev_folio.errors, status: :unprocessable_entity }
+      end
+    end
   end
 
   # POST /dev_folios

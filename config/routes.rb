@@ -2,6 +2,7 @@ Cabinet::Application.routes.draw do
   resources :dev_folios do
     member do
       put 'push'
+      get 'export'
     end
   end
 
