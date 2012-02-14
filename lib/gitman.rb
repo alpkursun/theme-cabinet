@@ -47,12 +47,17 @@ class Gitman
                       @project_label, 
                       :path => @@gitolite_work_dir_path
       
+      LOGGER.debug "Copying project files for repo #{@project_label}"
       # copy the project files into the git working directory
       FileUtils.cp_r Dir.glob(File.join(project_working_path, '*')), @project_git_work_path
+      LOGGER.debug "Copied project files successfully for repo #{@project_label}"
       
       # stage and commit the newly copied files
+      LOGGER.debug "Adding files to repo #{@project_label}"
       project_repo.add('.')
+      LOGGER.debug "Committing repo #{@project_label}"
       project_repo.commit("Seeded repo #{@project_label} with project files")
+      LOGGER.debug "Pushing repo #{@project_label}"
       project_repo.push
     rescue
       LOGGER.error "Error occurred seeding repo #{@project_label} with project files"
