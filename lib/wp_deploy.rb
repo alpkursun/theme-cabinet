@@ -29,9 +29,9 @@ class WpDeploy
 	def load_data( db_name, user, password, db_data_file )
   # test file exists
 		if File.exist?(db_data_file)
-			`mysql -u #{user} -p#{password} #{db_name} < #{db_data_file}`
+			%x[mysql -u #{user} -p#{password} #{db_name} < #{db_data_file}]
 		else
-			puts "File #{db_data_file} doesn't exist"
+			LOGGER.debug "File #{db_data_file} doesn't exist"
 		end
 	end
 
@@ -103,15 +103,13 @@ class WpDeploy
   # turn debug on
 		cfg = cfg.gsub(/define\('WP_DEBUG',.*\)/, "define('WP_DEBUG', true)") 
 
-		puts "after gsub"
-		puts cfg
+		#puts "after gsub"
+		#puts cfg
 
   # overwrite file
 		File.open(filename, "w") do |f|
 			f.write(cfg)
 		end
-  # debug
-  #	puts text
   end
 
   def process_wp_install
@@ -121,7 +119,7 @@ class WpDeploy
     htaccess = File.join(@fs_path, '.htaccess')
 
     %x[sudo chgrp -R www-data #{wp_content}]
-    %x[sudo chrgp -R www-data #{htaccess}]
+    %x[sudo chgrp www-data #{htaccess}]
 
     # create default admin user
     fname = "insert_user.php"
@@ -129,10 +127,10 @@ class WpDeploy
     wp_install_file = File.join(@fs_path, fname)
 
     if File.exist?(root_file)
-      `cp #{root_file} #{@fs_path}`
-      `php #{wp_install_file}`
+      %x[cp #{root_file} #{@fs_path}]
+      %x[php #{wp_install_file}]
     else
-      puts "File #{root_file} doesn't exist"
+      LOGGER.debug "File #{root_file} doesn't exist"
     end
   end
 
