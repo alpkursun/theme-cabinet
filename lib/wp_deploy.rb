@@ -116,7 +116,7 @@ class WpDeploy
 
   def process_wp_install
 
-    fname = "/var/www/insert_user.php"
+    fname = "insert_user.php"
     root_file = File.join("/var/www", fname)
     wp_install_file = File.join(@fs_path, fname)
 
@@ -124,7 +124,7 @@ class WpDeploy
       `cp #{root_file} #{@fs_path}`
       `php #{wp_install_file}`
     else
-      puts "File #{f} doesn't exist"
+      puts "File #{root_file} doesn't exist"
     end
   end
 
