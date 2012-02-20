@@ -3,7 +3,7 @@ class DevFolio
   
   # If set to true, this will enable validation of the developer's public key
   # and it will be set up as a gitolite key for the developer; if false, it won't
-  DEV_PUB_KEY_ENABLED = false
+  DEV_PUB_KEY_VALIDATION_ENABLED = false
   
   field :label, type: String
   field :job_id, type: String
@@ -18,7 +18,7 @@ class DevFolio
   validates_presence_of   :job_id
   validates_presence_of   :dev_id
   validates_presence_of   :dev_password
-  validates_presence_of   :dev_public_key_text, on: DEV_PUB_KEY_ENABLED
+  validates_presence_of   :dev_public_key_text, on: DEV_PUB_KEY_VALIDATION_ENABLED
   
   def dev_public_key=(file_data)
     @file_data = file_data
@@ -67,8 +67,8 @@ class DevFolio
   end
   
   def create_repo
-    # save the developer's public key if this option is enabled
-    if DEV_PUB_KEY_ENABLED
+    # save the developer's public key if it is provided
+    if self.dev_public_key_text
       save_public_key
     end
     # create the repo for the developer
