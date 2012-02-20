@@ -116,6 +116,14 @@ class WpDeploy
 
   def process_wp_install
 
+    # set permissions
+    wp_content = File.join(@fs_path, 'wp-content')
+    htaccess = File.join(@fs_path, '.htaccess')
+
+    %x[sudo chgrp -R www-data #{wp_content}]
+    %x[sudo chrgp -R www-data #{htaccess}]
+
+    # create default admin user
     fname = "insert_user.php"
     root_file = File.join("/var/www", fname)
     wp_install_file = File.join(@fs_path, fname)
@@ -127,7 +135,6 @@ class WpDeploy
       puts "File #{root_file} doesn't exist"
     end
   end
-
 
   # Init
 	def initialize( wp_path, wp_user, wp_password )
