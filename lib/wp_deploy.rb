@@ -29,16 +29,16 @@ class WpDeploy
 	def load_data( db_name, user, password, db_data_file )
   # test file exists
 		if File.exist?(db_data_file)
-			`mysql -u #{user} -p#{password} #{db_name} < #{db_data_file}`
+			%x[mysql -u #{user} -p#{password} #{db_name} < #{db_data_file}]
 		else
-			puts "File #{db_data_file} doesn't exist"
+			LOGGER.debug "File #{db_data_file} doesn't exist"
 		end
 	end
 
 	def get_old_domain( conn, db_name )
 		res = conn.query("SELECT option_value FROM #{db_name}.#{@wp_table_prefix}options WHERE option_name='siteurl'")
-		if (res.count != 1)
-			return false;
+		if res.count != 1
+			return false
 		else
 			res.each do |r|
 				return r['option_value']
@@ -60,18 +60,10 @@ class WpDeploy
 
 	end
 
-=begin
-	def load_data( conn, db_name, db_data_file )
-		sql_data = File.read( db_data_file )
-		conn.query("USE   #{db_name}")
-		conn.query(sql_data)	
-	end
-=end
-
   # returns an 8 character token
 	def rand_token
 		tok = rand(36**8).to_s(36)
-		if (tok.length < 8)
+		if tok.length < 8
 			rand_token
 		else
 			tok
@@ -111,17 +103,36 @@ class WpDeploy
   # turn debug on
 		cfg = cfg.gsub(/define\('WP_DEBUG',.*\)/, "define('WP_DEBUG', true)") 
 
-		puts "after gsub"
-		puts cfg
+		#puts "after gsub"
+		#puts cfg
 
   # overwrite file
 		File.open(filename, "w") do |f|
 			f.write(cfg)
 		end
-  # debug
-  #	puts text
-	end
+  end
 
+  def process_wp_install
+
+    # set permissions
+    wp_content = File.join(@fs_path, 'wp-content')
+    htaccess = File.join(@fs_path, '.htaccess')
+
+    %x[sudo chgrp -R www-data #{wp_content}]
+    %x[sudo chgrp www-data #{htaccess}]
+
+    # create default admin user
+    fname = "insert_user.php"
+    root_file = File.join("/var/www", fname)
+    wp_install_file = File.join(@fs_path, fname)
+
+    if File.exist?(root_file)
+      %x[cp #{root_file} #{@fs_path}]
+      %x[php #{wp_install_file}]
+    else
+      LOGGER.debug "File #{root_file} doesn't exist"
+    end
+  end
 
   # Init
 	def initialize( wp_path, wp_user, wp_password )
@@ -157,7 +168,6 @@ class WpDeploy
 
 	def deploy
 
-		#puts "creating database"
 		# get database connection
 		conn = get_connection( @db_user, @db_password )
 
@@ -165,7 +175,7 @@ class WpDeploy
 		create_database( conn, @wp_db_name )
 		LOGGER.debug "wp_deploy: database   #{@wp_db_name} created"
 
-		# create user
+		# create the mysql user
 		create_user( conn, @wp_db_user, @wp_db_password )
 		LOGGER.debug "wp_deploy: user   #{@wp_db_user} added"
 
@@ -185,8 +195,12 @@ class WpDeploy
 		conn.close
 		LOGGER.debug "wp_deploy: database connection closed"
 
-		# Process the wp-config.php file
+		# process the wp-config.php file
 		process_wp_config( @wp_db_name, @wp_db_user, @wp_db_password )
 		LOGGER.debug "wp_deploy: wp-config.php updated"
+
+    # WP specific processing
+    process_wp_install
+    LOGGER.debug "wp_deploy: WP specific processing completed"
 	end
 end
