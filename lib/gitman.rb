@@ -83,8 +83,9 @@ class Gitman
       
       # remove unnecessary files from the zip to leave only 
       # the wp-content/themes and wp-content/plugins subdirectories and their contents
+      # note the escaped backslash in the shell command below
       LOGGER.debug "Removing unnecessary files from project zip #{target_zip_file}"
-      output = %x[ zip -d "#{target_zip_file}" \* -x wp-content/plugins/\* wp-content/themes/\* ]
+      output = %x[ zip -d "#{target_zip_file}" \\* -x wp-content/plugins/\\* wp-content/themes/\\* ]
       LOGGER.debug output
       
     rescue Exception => e
