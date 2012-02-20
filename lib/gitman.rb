@@ -7,6 +7,7 @@ class Gitman
   @@git_user_name = APP_CONFIG['git_user_name']
   @@git_user_email = APP_CONFIG['git_user_email']
   @@git_repo_prefix = APP_CONFIG['git_repo_prefix']
+  @@completed_proj_dir = APP_CONFIG['completed_project_dir']
   
   def initialize(project_label, users) 
     @project_label = project_label
@@ -73,12 +74,19 @@ class Gitman
   # Zip up the head revision in the repository and copy it to the gitolite_work_dir_path,
   def export_repo
     tag_string = "accepted"
-    target_zip_file = @project_git_work_path + "_#{tag_string}.zip"
+    target_zip_file = "#{File.join(@@completed_proj_dir, @project_label)}.zip"
     # Tag and export the repo head revision contents to project_label + '_accepted'
     begin
       git_repo = git_init @project_git_work_path
       git_repo.add_tag(tag_string)
       git_repo.archive(tag_string, target_zip_file) # defaults to format of 'zip' if not specified in options
+      
+      # remove unnecessary files from the zip to leave only 
+      # the wp-content/themes and wp-content/plugins subdirectories and their contents
+      LOGGER.debug "Removing unnecessary files from project zip #{target_zip_file}"
+      output = %x[ zip -d #{target_zip_file} -x #{@project_label}/wp-content/plugins/\* #{@project_label}/wp-content/themes/\* ]
+      LOGGER.debug output
+      
     rescue Exception => e
       LOGGER.error "Error occurred exporting repo #{@project_label}: #{e.message}"
       return false
