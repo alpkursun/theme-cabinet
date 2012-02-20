@@ -84,7 +84,7 @@ class Gitman
       # remove unnecessary files from the zip to leave only 
       # the wp-content/themes and wp-content/plugins subdirectories and their contents
       LOGGER.debug "Removing unnecessary files from project zip #{target_zip_file}"
-      output = %x[ zip -d #{target_zip_file} -x #{@project_label}/wp-content/plugins/\* #{@project_label}/wp-content/themes/\* ]
+      output = %x[ zip -d #{target_zip_file} \* -x wp-content/plugins/\* wp-content/themes/\* ]
       LOGGER.debug output
       
     rescue Exception => e
