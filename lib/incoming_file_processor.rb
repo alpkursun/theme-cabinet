@@ -4,6 +4,7 @@
 class IncomingFileProcessor
   
   @@unzip_to_path = APP_CONFIG["wordpress_unzip_path"]
+  @@ftp_processed_path = APP_CONFIG["ftp_processed_path"]
   
   # Process a wordpress ZIP file. This will:
   # - Unzip the ZIP file contents to the configured working directory
@@ -32,6 +33,9 @@ class IncomingFileProcessor
       
       # create and save job_folio
       JobFolio.save_new_folio(job_id, output_path)
+      
+      # move the zip file to the 'processed' directory
+      FileUtils.mv file_path, @@ftp_processed_path
       
     rescue 
       LOGGER.debug "An error occurring processing inbound file: #{$!}"
