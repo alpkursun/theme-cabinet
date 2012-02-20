@@ -60,8 +60,8 @@ class Gitman
       project_repo.commit("Seeded repo #{@project_label} with project files")
       LOGGER.debug "Pushing repo #{@project_label}"
       project_repo.push
-    rescue
-      LOGGER.error "Error occurred seeding repo #{@project_label} with project files"
+    rescue Exception => e
+      LOGGER.error "Error occurred seeding repo #{@project_label} with project files: #{e.message}"
     end
   end
   
@@ -84,7 +84,7 @@ class Gitman
       # remove unnecessary files from the zip to leave only 
       # the wp-content/themes and wp-content/plugins subdirectories and their contents
       LOGGER.debug "Removing unnecessary files from project zip #{target_zip_file}"
-      output = %x[ zip -d #{target_zip_file} \* -x wp-content/plugins/\* wp-content/themes/\* ]
+      output = %x[ zip -d "#{target_zip_file}" \* -x wp-content/plugins/\* wp-content/themes/\* ]
       LOGGER.debug output
       
     rescue Exception => e
