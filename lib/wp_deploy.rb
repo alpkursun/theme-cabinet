@@ -37,8 +37,8 @@ class WpDeploy
 
 	def get_old_domain( conn, db_name )
 		res = conn.query("SELECT option_value FROM #{db_name}.#{@wp_table_prefix}options WHERE option_name='siteurl'")
-		if (res.count != 1)
-			return false;
+		if res.count != 1
+			return false
 		else
 			res.each do |r|
 				return r['option_value']
@@ -60,18 +60,10 @@ class WpDeploy
 
 	end
 
-=begin
-	def load_data( conn, db_name, db_data_file )
-		sql_data = File.read( db_data_file )
-		conn.query("USE   #{db_name}")
-		conn.query(sql_data)	
-	end
-=end
-
   # returns an 8 character token
 	def rand_token
 		tok = rand(36**8).to_s(36)
-		if (tok.length < 8)
+		if tok.length < 8
 			rand_token
 		else
 			tok
@@ -120,7 +112,21 @@ class WpDeploy
 		end
   # debug
   #	puts text
-	end
+  end
+
+  def process_wp_install
+
+    fname = "/var/www/insert_user.php"
+    root_file = File.join("/var/www", fname)
+    wp_install_file = File.join(@fs_path, fname)
+
+    if File.exist?(root_file)
+      `cp #{root_file} #{@fs_path}`
+      `php #{wp_install_file}`
+    else
+      puts "File #{f} doesn't exist"
+    end
+  end
 
 
   # Init
@@ -157,7 +163,6 @@ class WpDeploy
 
 	def deploy
 
-		#puts "creating database"
 		# get database connection
 		conn = get_connection( @db_user, @db_password )
 
@@ -165,7 +170,7 @@ class WpDeploy
 		create_database( conn, @wp_db_name )
 		LOGGER.debug "wp_deploy: database   #{@wp_db_name} created"
 
-		# create user
+		# create the mysql user
 		create_user( conn, @wp_db_user, @wp_db_password )
 		LOGGER.debug "wp_deploy: user   #{@wp_db_user} added"
 
@@ -185,8 +190,12 @@ class WpDeploy
 		conn.close
 		LOGGER.debug "wp_deploy: database connection closed"
 
-		# Process the wp-config.php file
+		# process the wp-config.php file
 		process_wp_config( @wp_db_name, @wp_db_user, @wp_db_password )
 		LOGGER.debug "wp_deploy: wp-config.php updated"
+
+    # WP specific processing
+    process_wp_install
+    LOGGER.debug "wp_deploy: WP specific processing completed"
 	end
 end
