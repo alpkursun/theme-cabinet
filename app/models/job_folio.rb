@@ -15,6 +15,7 @@ class JobFolio
   
   # call grab_page before saving record
   before_save :create_repo
+  after_save :stage_wp_site
 
   def self.save_new_folio(job_id, content_path)
     begin
