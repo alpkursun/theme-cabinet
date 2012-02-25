@@ -47,6 +47,7 @@ class Gitman
     begin
       # remove destination directory if it already exists
       if File.directory? @project_git_work_path
+        LOGGER.debug "Removing directory #{@project_git_work_path}"
         FileUtils.remove_entry_secure @project_git_work_path
       end
       
@@ -59,8 +60,12 @@ class Gitman
       LOGGER.debug "Copying project files for repo #{@project_label}"
       
       # move the project files into the git working directory
-      FileUtils.mv_r Dir.glob(File.join(project_working_path, '*')), @project_git_work_path
+      FileUtils.cp_r Dir.glob(File.join(project_working_path, '*')), @project_git_work_path
       LOGGER.debug "Copied project files successfully for repo #{@project_label}"
+      
+      # delete the project files from the working path
+      LOGGER.debug "Removing working files at #{project_working_path}"
+      FileUtils.remove_entry_secure project_working_path
       
       # stage and commit the newly copied files
       LOGGER.debug "Adding files to repo #{@project_label}"

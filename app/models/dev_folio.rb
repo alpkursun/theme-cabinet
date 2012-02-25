@@ -86,6 +86,7 @@ class DevFolio
     # Note - this assumes that the wordpress files are saved in the repository that
     # the WPDeploy script will look for them in a particular directory
     begin 
+      LOGGER.debug "Staging wordpress site #{self.label} for developer #{self.dev_id}"
       wpd = WpDeploy.new(self.label)
       wpd.deploy
     rescue Exception => e
