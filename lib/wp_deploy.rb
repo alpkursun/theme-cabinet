@@ -126,18 +126,18 @@ class WpDeploy
     begin
       if File.exist?(root_file)
         %x[cp #{root_file} #{@fs_path}]
-        %x[php #{wp_install_file}]
+        %x[php #{wp_install_file} #{@fs_path}]
       else
         LOGGER.debug "File #{root_file} doesn't exist"
       end
 
-      if File.exists(wp_content)
+      if File.exist?(wp_content)
         %x[sudo chgrp -R www-data #{wp_content}]
       else
         LOGGER.debug "wp-content path doesn't exist"
       end
 
-      if File.exists(htaccess)
+      if File.exist?(htaccess)
         %x[sudo chgrp www-data #{htaccess}]
       else
         LOGGER.debug "htaccess doesn't exist"
