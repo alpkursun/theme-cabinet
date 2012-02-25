@@ -63,9 +63,9 @@ class Gitman
       FileUtils.cp_r Dir.glob(File.join(project_working_path, '*')), @project_git_work_path
       LOGGER.debug "Copied project files successfully for repo #{@project_label}"
       
-      # delete the project files from the working path
-      LOGGER.debug "Removing working files at #{project_working_path}"
-      FileUtils.remove_entry_secure project_working_path
+      # delete the project files from the working path - ACTUALLY DO NOT DO THIS, THESE ARE REQUIRED!
+      #LOGGER.debug "Removing working files at #{project_working_path}"
+      #FileUtils.remove_entry_secure project_working_path
       
       # stage and commit the newly copied files
       LOGGER.debug "Adding files to repo #{@project_label}"
