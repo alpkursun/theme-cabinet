@@ -7,6 +7,7 @@ class Gitman
   @@git_user_name = APP_CONFIG['git_user_name']
   @@git_user_email = APP_CONFIG['git_user_email']
   @@git_repo_prefix = APP_CONFIG['git_repo_prefix']
+  @@completed_proj_dir = APP_CONFIG['completed_project_dir']
   
   def initialize(project_label, users) 
     @project_label = project_label
@@ -18,6 +19,8 @@ class Gitman
   def create_and_seed_repo(project_working_path)
     if create_repo
       seed_repo project_working_path
+    else
+      LOGGER.error "Repo was not successfully created and therefore not seeded."
     end
   end
 
@@ -33,6 +36,7 @@ class Gitman
       git_push @@gitolite_admin_path, "Added repo #{@project_label} with users: #{@users}"
       return true
     else
+      LOGGER.error "Existing gitolite config file entry found for project #{@project_label}, skipping repo creation"
       return false
     end
     
@@ -41,16 +45,27 @@ class Gitman
   ## Seed gitolite repository with project files 
   def seed_repo(project_working_path)
     begin
+      # remove destination directory if it already exists
+      if File.directory? @project_git_work_path
+        LOGGER.debug "Removing directory #{@project_git_work_path}"
+        FileUtils.remove_entry_secure @project_git_work_path
+      end
+      
       # clone the empty git repo created for this project
-      FileUtils.mkdir_p @project_git_work_path 
+      FileUtils.mkdir_p @project_git_work_path
       project_repo = Git.clone "#{@@git_repo_prefix}#{@project_label}.git",
                       @project_label, 
                       :path => @@gitolite_work_dir_path
       
       LOGGER.debug "Copying project files for repo #{@project_label}"
-      # copy the project files into the git working directory
+      
+      # move the project files into the git working directory
       FileUtils.cp_r Dir.glob(File.join(project_working_path, '*')), @project_git_work_path
       LOGGER.debug "Copied project files successfully for repo #{@project_label}"
+      
+      # delete the project files from the working path
+      LOGGER.debug "Removing working files at #{project_working_path}"
+      FileUtils.remove_entry_secure project_working_path
       
       # stage and commit the newly copied files
       LOGGER.debug "Adding files to repo #{@project_label}"
@@ -59,8 +74,8 @@ class Gitman
       project_repo.commit("Seeded repo #{@project_label} with project files")
       LOGGER.debug "Pushing repo #{@project_label}"
       project_repo.push
-    rescue
-      LOGGER.error "Error occurred seeding repo #{@project_label} with project files"
+    rescue Exception => e
+      LOGGER.error "Error occurred seeding repo #{@project_label} with project files: #{e.message}"
     end
   end
   
@@ -73,12 +88,20 @@ class Gitman
   # Zip up the head revision in the repository and copy it to the gitolite_work_dir_path,
   def export_repo
     tag_string = "accepted"
-    target_zip_file = @project_git_work_path + "_#{tag_string}.zip"
+    target_zip_file = "#{File.join(@@completed_proj_dir, @project_label)}.zip"
     # Tag and export the repo head revision contents to project_label + '_accepted'
     begin
       git_repo = git_init @project_git_work_path
       git_repo.add_tag(tag_string)
       git_repo.archive(tag_string, target_zip_file) # defaults to format of 'zip' if not specified in options
+      
+      # remove unnecessary files from the zip to leave only 
+      # the wp-content/themes and wp-content/plugins subdirectories and their contents
+      # note the escaped backslash in the shell command below
+      LOGGER.debug "Removing unnecessary files from project zip #{target_zip_file}"
+      output = %x[ zip -d "#{target_zip_file}" \\* -x wp-content/plugins/\\* wp-content/themes/\\* ]
+      LOGGER.debug output
+      
     rescue Exception => e
       LOGGER.error "Error occurred exporting repo #{@project_label}: #{e.message}"
       return false

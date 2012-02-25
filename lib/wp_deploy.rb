@@ -148,7 +148,7 @@ class WpDeploy
   end
 
   # Init
-	def initialize( wp_path, wp_user, wp_password )
+	def initialize( wp_path )
 		
 		@db_user = "root"
 		@db_password  = "snoopy311dog"
@@ -161,8 +161,8 @@ class WpDeploy
 		@wp_db_name = "wp_" + rand_token
 		@wp_db_user = rand_token
 		@wp_db_password = rand_token
-		@wp_admin_user = wp_user
-		@wp_admin_password = wp_password
+		@wp_admin_user = "admin"
+		@wp_admin_password = "dogsyourunclebob"
 		@wp_db_data_file = File.join(@fs_path, "wp_db_dump.sql")
 		@wp_config_file = File.join(@fs_path, "wp-config.php")
 		
