@@ -24,6 +24,10 @@ require_once("wp-admin/includes/misc.php");
 global $wp_version;
 global $wpdb;
 global $wp_rewrite;
+global $argv;
+
+// WP install path
+$wp_path = realpath($argv[1]);
 
 // WP default admin user
 $user_login = "admin";
@@ -42,7 +46,8 @@ $wpdb->query("DELETE FROM $usermeta_table");
 wp_insert_user( array ('user_login' => $user_login, 'user_pass' => $user_pass, 'role' => $user_role ) ) ;
 
 // Touch .htaccess
-$fp = fopen('.htaccess','w');
+$htaccess = $wp_path . DIRECTORY_SEPARATOR . '.htaccess';
+$fp = fopen($htaccess,'w');
 fclose($fp);
 
 // Generate .htaccess
@@ -50,6 +55,6 @@ $wp_rewrite->init();
 //flush_rewrite_rules( true );
 //save_mod_rewrite_rules();
 $rules = explode( "\n", $wp_rewrite->mod_rewrite_rules() );
-insert_with_markers( '.htaccess','WordPress', $rules);
+insert_with_markers( $htaccess,'WordPress', $rules);
 
 ?>
