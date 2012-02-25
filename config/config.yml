@@ -1,13 +1,13 @@
 defaults: &DEFAULTS
-  gitolite_admin_path: /Users/alpkursun/temp/test_gitolite/gitolite-admin
-  git_work_dir_path: /Users/alpkursun/temp/test_gitolite/work
+  gitolite_admin_path: /tmp/test_gitolite/gitolite-admin
+  git_work_dir_path: /tmp/test_gitolite/work
   git_repo_prefix: 'git@skynet:'
   git_user_name: 'admin'
   git_user_email: 'git.admin@themepivot.com'
-  wordpress_unzip_path: /Users/alpkursun/temp/test_wordpress_unzip
-  ftp_landing_path: /Users/alpkursun/temp/ftp_landing
-  ftp_processed_path: /Users/alpkursun/temp/ftp_processed
-  completed_project_dir: /Users/alpkursun/temp/completed_proj
+  wordpress_unzip_path: /tmp/test_wordpress_unzip
+  ftp_landing_path: /tmp/ftp_landing
+  ftp_processed_path: /tmp/ftp_processed
+  completed_project_path: /tmp/completed_proj
 
 development:
   <<: *DEFAULTS

@@ -7,7 +7,7 @@ class Gitman
   @@git_user_name = APP_CONFIG['git_user_name']
   @@git_user_email = APP_CONFIG['git_user_email']
   @@git_repo_prefix = APP_CONFIG['git_repo_prefix']
-  @@completed_proj_dir = APP_CONFIG['completed_project_dir']
+  @@completed_proj_dir = APP_CONFIG['completed_project_path']
   
   def initialize(project_label, users) 
     @project_label = project_label
