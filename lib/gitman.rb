@@ -45,15 +45,21 @@ class Gitman
   ## Seed gitolite repository with project files 
   def seed_repo(project_working_path)
     begin
+      # remove destination directory if it already exists
+      if File.directory? @project_git_work_path
+        FileUtils.remove_entry_secure @project_git_work_path
+      end
+      
       # clone the empty git repo created for this project
-      FileUtils.mkdir_p @project_git_work_path 
+      FileUtils.mkdir_p @project_git_work_path
       project_repo = Git.clone "#{@@git_repo_prefix}#{@project_label}.git",
                       @project_label, 
                       :path => @@gitolite_work_dir_path
       
       LOGGER.debug "Copying project files for repo #{@project_label}"
-      # copy the project files into the git working directory
-      FileUtils.cp_r Dir.glob(File.join(project_working_path, '*')), @project_git_work_path
+      
+      # move the project files into the git working directory
+      FileUtils.mv_r Dir.glob(File.join(project_working_path, '*')), @project_git_work_path
       LOGGER.debug "Copied project files successfully for repo #{@project_label}"
       
       # stage and commit the newly copied files

@@ -23,7 +23,12 @@ class IncomingFileProcessor
       # set the output directory name based on job id
       output_path = File.join @@unzip_to_path, job_id
       
-      # create unzip destination directory
+      # remove destination directory if it already exists
+      if File.directory? output_path
+        FileUtils.remove_entry_secure output_path
+      end
+      
+      # create unzip destination directory (and all required parents if missing)
       FileUtils.mkdir_p output_path
       
       # unzip the file using bash command
