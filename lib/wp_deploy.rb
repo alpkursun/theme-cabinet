@@ -114,23 +114,36 @@ class WpDeploy
 
   def process_wp_install
 
-    # set permissions
+    # php script to sanitise wp users
+    #root_file = File.join("/var/www", fname)
+    root_file = Rails.root.join('lib/assets','insert_user.php')
+    wp_install_file = File.join(@fs_path, 'insert_user.php')
+
+    # files / paths requiring permission changes
     wp_content = File.join(@fs_path, 'wp-content')
     htaccess = File.join(@fs_path, '.htaccess')
 
-    %x[sudo chgrp -R www-data #{wp_content}]
-    %x[sudo chgrp www-data #{htaccess}]
+    begin
+      if File.exist?(root_file)
+        %x[cp #{root_file} #{@fs_path}]
+        %x[php #{wp_install_file}]
+      else
+        LOGGER.debug "File #{root_file} doesn't exist"
+      end
 
-    # create default admin user
-    fname = "insert_user.php"
-    root_file = File.join("/var/www", fname)
-    wp_install_file = File.join(@fs_path, fname)
+      if File.exists(wp_content)
+        %x[sudo chgrp -R www-data #{wp_content}]
+      else
+        LOGGER.debug "wp-content path doesn't exist"
+      end
 
-    if File.exist?(root_file)
-      %x[cp #{root_file} #{@fs_path}]
-      %x[php #{wp_install_file}]
-    else
-      LOGGER.debug "File #{root_file} doesn't exist"
+      if File.exists(htaccess)
+        %x[sudo chgrp www-data #{htaccess}]
+      else
+        LOGGER.debug "htaccess doesn't exist"
+      end
+    rescue Exception => e
+      LOGGER.debug "exception processing wp install. details: #{e.message}"
     end
   end
 
