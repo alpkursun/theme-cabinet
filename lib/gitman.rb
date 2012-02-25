@@ -19,6 +19,8 @@ class Gitman
   def create_and_seed_repo(project_working_path)
     if create_repo
       seed_repo project_working_path
+    else
+      LOGGER.error "Repo was not successfully created and therefore not seeded."
     end
   end
 
@@ -34,6 +36,7 @@ class Gitman
       git_push @@gitolite_admin_path, "Added repo #{@project_label} with users: #{@users}"
       return true
     else
+      LOGGER.error "Existing gitolite config file entry found for project #{@project_label}, skipping repo creation"
       return false
     end
     

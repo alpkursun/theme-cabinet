@@ -41,5 +41,17 @@ class JobFolio
   def create_repo
     @gitman.create_and_seed_repo self.content_path
   end
+
+  # Create the wordpress staging site
+  def stage_wp_site
+    # Note - this assumes that the wordpress files are saved in the repository that
+    # the WPDeploy script will look for them in a particular directory
+    begin 
+      wpd = WpDeploy.new(self.label)
+      wpd.deploy
+    rescue Exception => e
+      LOGGER.error "Error occurred staging original wordpress site: #{e.message}"
+    end
+  end
   
 end
