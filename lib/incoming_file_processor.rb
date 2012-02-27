@@ -64,8 +64,8 @@ class IncomingFileProcessor
   # Add a flag to the project document in the market place DB to indicate that the files have been uploaded
   def update_marketplace_db(job_id)
     mongodb_conn = Mongo::Connection.from_uri(@@marketplace_db_conn)
-    mongodb_db = @mongodb_conn[@@marketplace_db_name]
-    mongodb_project_coll = @mongodb_db['projects']
+    mongodb_db = mongodb_conn[@@marketplace_db_name]
+    mongodb_project_coll = mongodb_db['projects']
     mongodb_project_coll.update({"plugin_id" => job_id}, {"$set" => {"uploaded" => "true"}})
   end
   
