@@ -16,4 +16,12 @@ test:
   <<: *DEFAULTS
 
 production:
-  <<: *DEFAULTS
+  gitolite_admin_path: /home/ubuntu/gitrepos/gitolite-admin
+  git_work_dir_path: /var/www
+  git_repo_prefix: 'git@pivot-node2:'
+  git_user_name: 'ubuntu'
+  git_user_email: 'admin+git@themepivot.com'
+  wordpress_unzip_path: /home/ubuntu/wordpress
+  ftp_landing_path: /home/ftp_shared/uploads
+  completed_project_path: /home/ftp_shared/completed_proj
+  ftp_processed_path: /home/ftp_shared/processed
