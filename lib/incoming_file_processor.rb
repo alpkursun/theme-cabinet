@@ -71,6 +71,8 @@ class IncomingFileProcessor
       mongodb_project_coll.update({"plugin_id" => job_id}, {"$set" => {"uploaded" => "true"}})
     rescue Exception => e
       LOGGER.error "Error occurred updating marketplace DB #{@@marketplace_db_name} for plugin_id #{job_id}: #{e.message}"
+    ensure
+      mongodb_conn.close unless mongodb_conn.nil?
     end
   end
   
