@@ -15,6 +15,8 @@ class JobFolio
   
   # call grab_page before saving record
   before_save :create_repo
+  after_save :stage_wp_site
+  before_destroy :delete_repo
 
   def self.save_new_folio(job_id, content_path)
     begin
@@ -23,6 +25,8 @@ class JobFolio
       job_folio.content_path = content_path
       if job_folio.valid?
         job_folio.save
+      else
+        LOGGER.error "Job folio #{job_folio.label} is not valid: #{job_folio.errors.each {|e| e.to_s + "; "}}"
       end
     rescue Exception => e
       LOGGER.error "Error occurred saving job folio: #{e.message}"
@@ -40,6 +44,30 @@ class JobFolio
   
   def create_repo
     @gitman.create_and_seed_repo self.content_path
+  end
+
+  # Create the wordpress staging site
+  def stage_wp_site
+    # Note - this assumes that the wordpress files are saved in the repository that
+    # the WPDeploy script will look for them in a particular directory
+    begin 
+      LOGGER.debug "Staging original wordpress site for project #{self.label}"
+      wpd = WpDeploy.new(self.label)
+      wpd.deploy
+    rescue Exception => e
+      LOGGER.error "Error occurred staging original wordpress site: #{e.message}"
+    end
+  end
+  
+  def delete_repo
+    if not @gitman
+      self.init
+    end
+    begin 
+      @gitman.delete_repo
+    rescue Exception => e
+      LOGGER.error "Error occurred deleting repository #{self.label} from git (#{e.message}), but deleting job_folio record anyway ..." 
+    end
   end
   
 end

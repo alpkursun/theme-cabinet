@@ -23,7 +23,12 @@ class IncomingFileProcessor
       # set the output directory name based on job id
       output_path = File.join @@unzip_to_path, job_id
       
-      # create unzip destination directory
+      # remove destination directory if it already exists
+      if File.directory? output_path
+        FileUtils.remove_entry_secure output_path
+      end
+      
+      # create unzip destination directory (and all required parents if missing)
       FileUtils.mkdir_p output_path
       
       # unzip the file using bash command
@@ -35,7 +40,8 @@ class IncomingFileProcessor
       JobFolio.save_new_folio(job_id, output_path)
       
       # move the zip file to the 'processed' directory
-      FileUtils.mv file_path, @@ftp_processed_path
+      # force overwriting of files if they already exist to avoid interactive prompt
+      FileUtils.mv file_path, @@ftp_processed_path, :force => true
       
     rescue 
       LOGGER.debug "An error occurring processing inbound file: #{$!}"

@@ -114,28 +114,41 @@ class WpDeploy
 
   def process_wp_install
 
-    # set permissions
+    # php script to sanitise wp users
+    #root_file = File.join("/var/www", fname)
+    root_file = Rails.root.join('lib/assets','insert_user.php')
+    wp_install_file = File.join(@fs_path, 'insert_user.php')
+
+    # files / paths requiring permission changes
     wp_content = File.join(@fs_path, 'wp-content')
     htaccess = File.join(@fs_path, '.htaccess')
 
-    %x[sudo chgrp -R www-data #{wp_content}]
-    %x[sudo chgrp www-data #{htaccess}]
+    begin
+      if File.exist?(root_file)
+        %x[cp #{root_file} #{@fs_path}]
+        %x[php #{wp_install_file} #{@fs_path}]
+      else
+        LOGGER.debug "File #{root_file} doesn't exist"
+      end
 
-    # create default admin user
-    fname = "insert_user.php"
-    root_file = File.join("/var/www", fname)
-    wp_install_file = File.join(@fs_path, fname)
+      if File.exist?(wp_content)
+        %x[sudo chgrp -R www-data #{wp_content}]
+      else
+        LOGGER.debug "wp-content path doesn't exist"
+      end
 
-    if File.exist?(root_file)
-      %x[cp #{root_file} #{@fs_path}]
-      %x[php #{wp_install_file}]
-    else
-      LOGGER.debug "File #{root_file} doesn't exist"
+      if File.exist?(htaccess)
+        %x[sudo chgrp www-data #{htaccess}]
+      else
+        LOGGER.debug "htaccess doesn't exist"
+      end
+    rescue Exception => e
+      LOGGER.debug "exception processing wp install. details: #{e.message}"
     end
   end
 
   # Init
-	def initialize( wp_path, wp_user, wp_password )
+	def initialize( wp_path )
 		
 		@db_user = "root"
 		@db_password  = "snoopy311dog"
@@ -148,8 +161,8 @@ class WpDeploy
 		@wp_db_name = "wp_" + rand_token
 		@wp_db_user = rand_token
 		@wp_db_password = rand_token
-		@wp_admin_user = wp_user
-		@wp_admin_password = wp_password
+		@wp_admin_user = "admin"
+		@wp_admin_password = "dogsyourunclebob"
 		@wp_db_data_file = File.join(@fs_path, "wp_db_dump.sql")
 		@wp_config_file = File.join(@fs_path, "wp-config.php")
 		
