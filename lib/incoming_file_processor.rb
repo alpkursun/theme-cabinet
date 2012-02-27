@@ -5,6 +5,8 @@ class IncomingFileProcessor
   
   @@unzip_to_path = APP_CONFIG["wordpress_unzip_path"]
   @@ftp_processed_path = APP_CONFIG["ftp_processed_path"]
+  @@marketplace_db_conn = APP_CONFIG["marketplace_db_conn"]
+  @@marketplace_db_name = APP_CONFIG["marketplace_db_name"]
   
   # Process a wordpress ZIP file. This will:
   # - Unzip the ZIP file contents to the configured working directory
@@ -43,6 +45,9 @@ class IncomingFileProcessor
       # force overwriting of files if they already exist to avoid interactive prompt
       FileUtils.mv file_path, @@ftp_processed_path, :force => true
       
+      # update the record for the project to indicate that the content has been received
+      update_marketplace_db job_id
+      
     rescue 
       LOGGER.debug "An error occurring processing inbound file: #{$!}"
     end
@@ -54,6 +59,14 @@ class IncomingFileProcessor
   def get_job_id(file_path)
     # get the job id based on the zip file name
     return File.basename(file_path, ".zip") # this will return the zip file name without its extension
+  end
+  
+  # Add a flag to the project document in the market place DB to indicate that the files have been uploaded
+  def update_marketplace_db(job_id)
+    mongodb_conn = Mongo::Connection.from_uri(@@marketplace_db_conn)
+    mongodb_db = @mongodb_conn[@@marketplace_db_name]
+    mongodb_project_coll = @mongodb_db['projects']
+    mongodb_project_coll.update({"plugin_id" => job_id}, {"$set" => {"uploaded" => "true"}})
   end
   
 end

@@ -8,6 +8,8 @@ defaults: &DEFAULTS
   ftp_landing_path: /tmp/ftp_landing
   ftp_processed_path: /tmp/ftp_processed
   completed_project_path: /tmp/completed_proj
+  marketplace_db_conn: 'mongodb://heroku:db0b1438e563f64f051101b2b393f0c1@staff.mongohq.com:10034/app2825221'
+  marketplace_db_name: app2825221
 
 development:
   <<: *DEFAULTS
