@@ -16,11 +16,24 @@ development:
 
 test:
   <<: *DEFAULTS
+  
+preprod:
+  gitolite_admin_path: /home/ubuntu/gitrepos/gitolite-admin
+  git_work_dir_path: /var/www
+  git_repo_prefix: 'git@pivot-node2:'
+  git_user_name: 'ubuntu'
+  git_user_email: 'admin+git@themepivot.com'
+  wordpress_unzip_path: /home/ubuntu/wordpress
+  ftp_landing_path: /home/ftp_shared/uploads
+  completed_project_path: /home/ftp_shared/completed_proj
+  ftp_processed_path: /home/ftp_shared/processed
+  marketplace_db_conn: 'mongodb://heroku:9eea2e25a2f6b27a9647b1a2e5475b1e@staff.mongohq.com:10027/app2414627'
+  marketplace_db_name: 'app2414627'
 
 production:
   gitolite_admin_path: /home/ubuntu/gitrepos/gitolite-admin
   git_work_dir_path: /var/www
-  git_repo_prefix: 'git@pivot-node2:'
+  git_repo_prefix: 'git@pivot-node1:'
   git_user_name: 'ubuntu'
   git_user_email: 'admin+git@themepivot.com'
   wordpress_unzip_path: /home/ubuntu/wordpress
