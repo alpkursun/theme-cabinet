@@ -154,7 +154,7 @@ class WpDeploy
 		@db_password  = "snoopy311dog"
 
 		# pivot staging environment
-		@pivot_domain = "http://107.21.227.54:8080/#{wp_path}"
+		@pivot_domain = "#{APP_CONFIG["wp_deploy_pivot_domain"]}/#{wp_path}"
 		@fs_path = "/var/www/#{wp_path}"
 
 		# wordpress..

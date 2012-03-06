@@ -10,6 +10,7 @@ defaults: &DEFAULTS
   completed_project_path: /tmp/completed_proj
   marketplace_db_conn: 'mongodb://heroku:db0b1438e563f64f051101b2b393f0c1@staff.mongohq.com:10034/app2825221'
   marketplace_db_name: 'app2825221'
+  wp_deploy_pivot_domain: 'http://localhost:8080'
 
 development:
   <<: *DEFAULTS
@@ -29,6 +30,7 @@ preprod:
   ftp_processed_path: /home/ftp_shared/processed
   marketplace_db_conn: 'mongodb://heroku:9eea2e25a2f6b27a9647b1a2e5475b1e@staff.mongohq.com:10027/app2414627'
   marketplace_db_name: 'app2414627'
+  wp_deploy_pivot_domain: 'http://23.21.239.84:8080'
 
 production:
   gitolite_admin_path: /home/ubuntu/gitrepos/gitolite-admin
@@ -42,3 +44,4 @@ production:
   ftp_processed_path: /home/ftp_shared/processed
   marketplace_db_conn: 'mongodb://heroku:db0b1438e563f64f051101b2b393f0c1@staff.mongohq.com:10034/app2825221'
   marketplace_db_name: 'app2825221'
+  wp_deploy_pivot_domain: 'http://107.21.227.54:8080'
