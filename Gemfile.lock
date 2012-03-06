@@ -69,7 +69,6 @@ GEM
     mongoid-paperclip (0.0.7)
       paperclip (>= 2.3.6)
     multi_json (1.0.4)
-    mysql2 (0.3.11)
     paperclip (2.5.0)
       activerecord (>= 2.3.0)
       activesupport (>= 2.3.2)
@@ -138,7 +137,6 @@ DEPENDENCIES
   log4r
   mongoid (~> 2.4)
   mongoid-paperclip
-  mysql2
   rails (= 3.1.2)
   sass-rails (~> 3.1.5.rc.2)
   turn (~> 0.8.3)

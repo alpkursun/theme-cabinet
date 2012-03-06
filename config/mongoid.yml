@@ -16,10 +16,15 @@ test:
   host: localhost
   database: app_test
 
+preprod:
+  <<: *defaults
+  uri: 'mongodb://heroku:db0b1438e563f64f051101b2b393f0c1@staff.mongohq.com:10034/app2825221'
+
 # set these environment variables on your prod server
 production:
   <<: *defaults
-  uri: <%= ENV['MONGOHQ_URL'] %>
+  uri: 'mongodb://heroku:9eea2e25a2f6b27a9647b1a2e5475b1e@staff.mongohq.com:10027/app2414627'
+#  uri: <%= ENV['MONGOHQ_URL'] %>
 #  host: <%= ENV['MONGOID_URL'] %>
 #  port: <%= ENV['MONGOID_PORT'] %>
 #  username: <%= ENV['MONGOID_USERNAME'] %>
