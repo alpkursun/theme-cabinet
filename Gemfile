@@ -1,5 +1,13 @@
 source 'http://rubygems.org'
 
+def gem_available?(name)
+   Gem::Specification.find_by_name(name)
+rescue Gem::LoadError
+   false
+rescue
+   Gem.available?(name)
+end
+
 gem 'rails', '3.1.2'
 
 # Bundle edge Rails instead:
@@ -18,8 +26,8 @@ end
 
 gem 'jquery-rails'
 
-if (Gem.available?('mysql2'))
-  gem 'mysql2'
+if gem_available?('mysql2')
+  gem 'mysql2', :require => false
 end
 
 # To use ActiveModel has_secure_password
