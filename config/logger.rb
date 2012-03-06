@@ -26,6 +26,10 @@ if RAILS_ENV == 'test'
   RAILS_DEFAULT_LOGGER.add( Log4r::Outputter['stderr_test'] )
 end
 
+if RAILS_ENV == 'preprod'
+  RAILS_DEFAULT_LOGGER.level = Log4r::DEBUG
+end
+
 if RAILS_ENV == 'production'
   Log4r::Outputter['standardlog'].level = Log4r::OFF
   Log4r::Outputter['stderr'].level = Log4r::OFF
