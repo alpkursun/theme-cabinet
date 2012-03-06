@@ -17,7 +17,7 @@ class DevFolio
 
   validates_presence_of   :job_id
   validates_presence_of   :dev_id
-  validates_presence_of   :dev_password
+  #validates_presence_of   :dev_password
   validates_presence_of   :dev_public_key_text, on: DEV_PUB_KEY_VALIDATION_ENABLED
   
   def dev_public_key=(file_data)
