@@ -1,4 +1,7 @@
 class DevFoliosController < ApplicationController
+
+  before_filter :authenticate_admin!
+
   # GET /dev_folios
   # GET /dev_folios.json
   def index

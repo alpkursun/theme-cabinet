@@ -1,4 +1,9 @@
+require 'devise'
+
 class JobFoliosController < ApplicationController
+
+  before_filter :authenticate_admin!
+
   # GET /job_folios
   # GET /job_folios.json
   def index

@@ -54,3 +54,4 @@ gem 'git'
 gem "mongoid-paperclip", :require => "mongoid_paperclip"
 gem 'uuidtools'
 gem 'fssm'
+gem 'devise'
