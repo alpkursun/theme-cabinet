@@ -30,7 +30,10 @@ class FileListener
           # log the fact that we've detected a new file
           LOGGER.debug "Detected new #{type == :directory ? 'directory' : 'file'} #{filename} in #{basedir}"
           # kick off the processing of the file
-          IncomingFileProcessor.new.process_file File.join(basedir, filename)
+          incoming_file_processor = fork do 
+            IncomingFileProcessor.new.process_file File.join(basedir, filename)
+          end
+          Process.detach(incoming_file_processor)
         end
       end
       
