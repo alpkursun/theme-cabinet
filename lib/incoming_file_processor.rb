@@ -73,7 +73,7 @@ class IncomingFileProcessor
       mongodb_conn = Mongo::Connection.from_uri(@@marketplace_db_conn)
       mongodb_db = mongodb_conn[@@marketplace_db_name]
       mongodb_project_coll = mongodb_db['projects']
-      mongodb_project_coll.update({"plugin_id" => job_id}, {"$set" => {"uploaded" => "true"}})
+      mongodb_project_coll.update({"plugin_id" => job_id}, {"$set" => {"uploaded" => true}})
     rescue Exception => e
       LOGGER.error "Error occurred updating marketplace DB #{@@marketplace_db_name} for plugin_id #{job_id}: #{e.message}"
     ensure
