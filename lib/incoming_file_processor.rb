@@ -82,7 +82,7 @@ class IncomingFileProcessor
   end
   
   # Check that a project exists with plugin_id = job_id. Returns true if yes, false otherwise.
-  def check_project_exists(job_id) {
+  def check_project_exists(job_id)
     begin
       LOGGER.debug "Updating marketplace project in DB #{@@marketplace_db_name} for plugin_id #{job_id}"
       mongodb_conn = Mongo::Connection.from_uri(@@marketplace_db_conn)
@@ -99,6 +99,6 @@ class IncomingFileProcessor
     ensure
       mongodb_conn.close unless mongodb_conn.nil?
     end
-  }
+  end
   
 end
