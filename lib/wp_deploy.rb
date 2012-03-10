@@ -136,7 +136,7 @@ class WpDeploy
     # touch .htaccess
     %x[sudo touch #{htaccess}]
     %x[sudo chown ubuntu:ubuntu #{htaccess}]
-    %x[sudu chmod 666 #{htaccess}]
+    %x[sudo chmod 666 #{htaccess}]
 
     begin
       if File.exist?(root_file)
