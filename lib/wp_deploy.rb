@@ -123,15 +123,15 @@ class WpDeploy
     htaccess = File.join(@fs_path, '.htaccess')
 
     # set permissions on path
-    %x[find /var/www/#@{fs_path} -type d -exec chmod 755 {} \\;]
-    %x[find /var/www/#@{fs_path} -type f -exec chmod 644 {} \\;]
-    %x[find /var/www/#@{fs_path}/wp-content/cache -type d -exec chmod 777 {} \\;]
-    %x[chmod 666 /var/www/#@{fs_path}/wp-content/advanced-cache.php]
-    %x[chmod 666 /var/www/#@{fs_path}/wp-content/wp-cache-config.php]
-    %x[chmod -R 777 /var/www/#@{fs_path}/wp-content/themes]
-    %x[chmod -R 777 /var/www/#@{fs_path}/wp-content/plugins]
-    %x[chmod 777 /var/www/#@{fs_path}/wp-content/uploads]
-    %x[chmod 777 /var/www/#@{fs_path}/wp-content/upgrade]
+    %x[find /var/www/#{@fs_path} -type d -exec chmod 755 {} \\;]
+    %x[find /var/www/#{@fs_path} -type f -exec chmod 644 {} \\;]
+    %x[find /var/www/#{@fs_path}/wp-content/cache -type d -exec chmod 777 {} \\;]
+    %x[chmod 666 /var/www/#{@fs_path}/wp-content/advanced-cache.php]
+    %x[chmod 666 /var/www/#{@fs_path}/wp-content/wp-cache-config.php]
+    %x[chmod -R 777 /var/www/#{@fs_path}/wp-content/themes]
+    %x[chmod -R 777 /var/www/#{@fs_path}/wp-content/plugins]
+    %x[chmod 777 /var/www/#{@fs_path}/wp-content/uploads]
+    %x[chmod 777 /var/www/#{@fs_path}/wp-content/upgrade]
 
     # touch .htaccess
     %x[sudo touch #{htaccess}]
