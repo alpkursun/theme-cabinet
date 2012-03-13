@@ -115,13 +115,28 @@ class WpDeploy
   def process_wp_install
 
     # php script to sanitise wp users
-    #root_file = File.join("/var/www", fname)
     root_file = Rails.root.join('lib/assets','insert_user.php')
     wp_install_file = File.join(@fs_path, 'insert_user.php')
 
     # files / paths requiring permission changes
     wp_content = File.join(@fs_path, 'wp-content')
     htaccess = File.join(@fs_path, '.htaccess')
+
+    # set permissions on path
+    %x[find #{@fs_path} -type d -exec chmod 755 {} \\;]
+    %x[find #{@fs_path} -type f -exec chmod 644 {} \\;]
+    %x[find #{@fs_path}/wp-content/cache -type d -exec chmod 777 {} \\;]
+    %x[chmod 666 #{@fs_path}/wp-content/advanced-cache.php]
+    %x[chmod 666 #{@fs_path}/wp-content/wp-cache-config.php]
+    %x[chmod -R 777 #{@fs_path}/wp-content/themes]
+    %x[chmod -R 777 #{@fs_path}/wp-content/plugins]
+    %x[chmod 777 #{@fs_path}/wp-content/uploads]
+    %x[chmod 777 #{@fs_path}/wp-content/upgrade]
+
+    # touch .htaccess
+    %x[sudo touch #{htaccess}]
+    %x[sudo chown ubuntu:ubuntu #{htaccess}]
+    %x[sudo chmod 666 #{htaccess}]
 
     begin
       if File.exist?(root_file)
