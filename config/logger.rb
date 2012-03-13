@@ -16,7 +16,7 @@ cfg['RAILS_ENV'] = RAILS_ENV
 # load the YAML file with this
 cfg.load_yaml_file("#{RAILS_ROOT}/config/log4r.yml")
 RAILS_DEFAULT_LOGGER = Log4r::Logger['default']
-RAILS_DEFAULT_LOGGER.level = (RAILS_ENV == 'development' ? Log4r::DEBUG : Log4r::INFO)
+RAILS_DEFAULT_LOGGER.level = (RAILS_ENV == 'development' ? Log4r::DEBUG : Log4r::DEBUG)
 
 # add an alias for convenience
 LOGGER = RAILS_DEFAULT_LOGGER
