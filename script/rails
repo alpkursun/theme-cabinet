@@ -1,7 +1,8 @@
 #!/usr/bin/env ruby
 # This command will automatically be run when you run "rails" with Rails 3 gems installed from the root of your application.
 
-## Start code to make WEBrick run SSL
+## Start of code to make WEBrick run SSL (note - this will allow only https access, not http)
+=begin
 require 'rubygems'
 require 'rails/commands/server'
 require 'rack'
@@ -29,6 +30,7 @@ module Rails
         end
     end
 end
+=end
 ## End code to make WEBrick run SSL
 
 APP_PATH = File.expand_path('../../config/application',  __FILE__)

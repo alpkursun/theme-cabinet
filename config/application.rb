@@ -51,8 +51,8 @@ module Cabinet
     # Version of your assets, change this if you want to expire all your assets
     config.assets.version = '1.0'
     
-    # force SSL
-    config.force_ssl = true
+    # don't force SSL - this will be handled by apache/nginx externally
+    config.force_ssl = false
     #config.to_prepare { Devise::SessionsController.force_ssl }
     #config.to_prepare { Devise::RegistrationsController.force_ssl }
     
