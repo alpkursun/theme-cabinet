@@ -193,7 +193,7 @@ class WpDeploy
 
       if File.exists?(root_file)
         %x[cp #{root_file} #{@fs_path}]
-        %x[php #{wp_install_file} #{@fs_path}]
+        %x[php #{wp_install_file} #{@fs_path} &]
       else
         LOGGER.debug "File #{root_file} doesn't exist"
       end
