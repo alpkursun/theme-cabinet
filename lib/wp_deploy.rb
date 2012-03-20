@@ -176,6 +176,7 @@ class WpDeploy
       end
       if File.exists?(File.join(@fs_path, 'wp-content'))
         %x[sudo chgrp -R www-data #{@fs_path}/wp-content]
+        %x[sudo chmod 775 #{@fs_path}/wp-content]
       end
       if File.exists?(File.join(@fs_path, 'wp-admin'))
         %x[sudo chown -R www-data #{@fs_path}/wp-admin]
