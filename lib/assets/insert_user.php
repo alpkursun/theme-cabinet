@@ -17,7 +17,6 @@
 
 require_once("wp-load.php");
 require_once("wp-includes/version.php");
-require_once("wp-includes/registration.php");
 require_once("wp-includes/rewrite.php");
 require_once("wp-admin/includes/misc.php");
 
@@ -43,6 +42,8 @@ $wpdb->query("DELETE FROM $user_table");
 $wpdb->query("DELETE FROM $usermeta_table");
 
 // Insert new default admin user
+if ( !function_exists( 'wp_insert_user' ) )
+		include ABSPATH . '/wp-includes/user.php';
 wp_insert_user( array ('user_login' => $user_login, 'user_pass' => $user_pass, 'role' => $user_role ) ) ;
 
 // Touch .htaccess
