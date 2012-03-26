@@ -40,7 +40,7 @@ class IncomingFileProcessor
       
       # unzip the file using bash command
       LOGGER.debug "Unzipping file to #{output_path} ... "
-      output = %x[ unzip #{file_path} -d #{output_path} ]
+      output = %x[ unzip #{file_path} -d #{output_path} 2>&1 ]
       LOGGER.debug output
       
       # create and save job_folio

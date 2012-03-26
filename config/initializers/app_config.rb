@@ -10,3 +10,13 @@ FileListener.instance.start_listening
 
 # Register exit handler call to stop the file listener thread
 at_exit { FileListener.instance.stop_listening }
+
+class AppConfig
+  class << self
+    
+    def wp_deploy_enabled?
+      APP_CONFIG['wp_deploy_enable']
+    end
+    
+  end
+end

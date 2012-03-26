@@ -26,10 +26,13 @@ class JobFolio
       if job_folio.valid?
         job_folio.save
       else
-        LOGGER.error "Job folio #{job_folio.label} is not valid: #{job_folio.errors.each {|e| e.to_s + "; "}}"
+        error_msg = "Job folio #{job_folio.label} is not valid: #{job_folio.errors.each {|e| e.to_s + "; "}}"
+        LOGGER.error error_msg
+        raise error_msg
       end
     rescue Exception => e
       LOGGER.error "Error occurred saving job folio: #{e.message}"
+      raise e
     else
       LOGGER.debug "Successfully saved job folio!"
     end
@@ -51,9 +54,13 @@ class JobFolio
     # Note - this assumes that the wordpress files are saved in the repository that
     # the WPDeploy script will look for them in a particular directory
     begin 
-      LOGGER.debug "Staging original wordpress site for project #{self.label}"
-      wpd = WpDeploy.new(self.label)
-      wpd.deploy
+      if AppConfig.wp_deploy_enabled?
+        LOGGER.debug "Staging original wordpress site for project #{self.label}"
+        wpd = WpDeploy.new(self.label)
+        wpd.deploy
+      else
+        LOGGER.info "Skipping staging of WordPress site for #{self.label} as wp_deploy is disabled"
+      end
     rescue Exception => e
       LOGGER.error "Error occurred staging original wordpress site: #{e.message}"
     end
